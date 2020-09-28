@@ -2,13 +2,12 @@ module github.com/linger1216/go-utils
 
 go 1.14
 
-replace (
-	google.golang.org/grpc => google.golang.org/grpc v1.26.0
-)
+replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
 	github.com/ClickHouse/clickhouse-go v1.4.3
 	github.com/araddon/dateparse v0.0.0-20200409225146-d820a6159ab1
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/coreos/etcd v3.3.22+incompatible
 	github.com/coreos/go-semver v0.3.0 // indirect

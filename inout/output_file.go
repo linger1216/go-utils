@@ -31,7 +31,7 @@ func (x *WriterFile) Close() error {
 	return x.f.Close()
 }
 
-func NewOutputCSV(cfg *WriterFileConfig) *WriterFile {
+func NewWriterFile(cfg *WriterFileConfig) *WriterFile {
 	ret := &WriterFile{}
 	flag := 0
 	if strings.ToLower(cfg.Flag) == "append" {

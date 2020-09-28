@@ -7,9 +7,21 @@ type Page struct {
 	End   int64
 }
 
+// n 为页数
 func SplitPage(total int64, n int) []*Page {
-	pageSize := int64(math.Ceil(float64(total) / float64(n)))
+
 	ret := make([]*Page, 0)
+
+	// 总数量还没有页码多
+	if total < int64(n) || n == 0 {
+		ret = append(ret, &Page{
+			Start: 0,
+			End:   total,
+		})
+		return ret
+	}
+
+	pageSize := int64(math.Ceil(float64(total) / float64(n)))
 	if pageSize >= total {
 		ret = append(ret, &Page{
 			Start: 0,
