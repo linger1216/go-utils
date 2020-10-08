@@ -8,12 +8,36 @@ type Page struct {
 }
 
 // n 为页数
-func SplitPage(total int64, n int) []*Page {
+func SplitPage(total int64, page int) []*Page {
 
+	if total == 0 || page == 0 {
+		return nil
+	}
+
+	// 总数量还没有页码多, 比如total=5, page=30
+	// 那就分成5页即可
 	ret := make([]*Page, 0)
+	if total < int64(page) {
+		for i := int64(0); i < total; i++ {
+			s, e := i, i+1
+			if e > total {
+				e = total
+			}
+			ret = append(ret, &Page{
+				Start: s,
+				End:   e,
+			})
+		}
+		return ret
+	}
 
-	// 总数量还没有页码多
-	if total < int64(n) || n == 0 {
+	// 应该每页是多少?
+	// total:47 page:30 => pageSize:2
+	pageSize := int64(math.Ceil(float64(total) / float64(page)))
+
+	// 每页的大小, 比总量还大
+	// total:47 page:1 => pageSize:47
+	if pageSize >= total {
 		ret = append(ret, &Page{
 			Start: 0,
 			End:   total,
@@ -21,22 +45,18 @@ func SplitPage(total int64, n int) []*Page {
 		return ret
 	}
 
-	pageSize := int64(math.Ceil(float64(total) / float64(n)))
-	if pageSize >= total {
-		ret = append(ret, &Page{
-			Start: 0,
-			End:   total,
-		})
-	} else {
-		for i := 0; i < n-1; i++ {
-			ret = append(ret, &Page{
-				Start: int64(i) * pageSize,
-				End:   int64(i+1) * pageSize,
-			})
+	//
+	for i := 0; i < page; i++ {
+		s, e := int64(i)*pageSize, int64(i+1)*pageSize
+		if e > total {
+			e = total
+		}
+		if s >= total {
+			break
 		}
 		ret = append(ret, &Page{
-			Start: int64(n-1) * pageSize,
-			End:   total,
+			Start: s,
+			End:   e,
 		})
 	}
 	return ret
