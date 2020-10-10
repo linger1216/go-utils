@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -172,16 +173,19 @@ func InterruptHandler(errc chan<- error) {
 	errc <- terminateError
 }
 
-func GetFileList(path string) []string {
+func GetFileList(directory string, ext string) []string {
+	ext = strings.ToLower(ext)
 	arr := make([]string, 0)
-	err := filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
+	err := filepath.Walk(directory, func(filename string, f os.FileInfo, err error) error {
 		if f == nil {
 			return err
 		}
 		if f.IsDir() {
 			return nil
 		}
-		arr = append(arr, path)
+		if len(ext) == 0 || ext == path.Ext(filename) {
+			arr = append(arr, filename)
+		}
 		return nil
 	})
 
