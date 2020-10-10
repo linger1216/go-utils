@@ -27,6 +27,8 @@ type WriterFile struct {
 }
 
 func (x *WriterFile) Close() error {
+	x.Lock()
+	defer x.Unlock()
 	_ = x.w.Flush()
 	return x.f.Close()
 }
