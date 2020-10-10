@@ -183,7 +183,6 @@ func In(arr []string, val string) bool {
 }
 
 func GetFileList(directory string, exts ...string) []string {
-	ext = strings.ToLower(ext)
 	arr := make([]string, 0)
 	err := filepath.Walk(directory, func(filename string, f os.FileInfo, err error) error {
 		if f == nil {
