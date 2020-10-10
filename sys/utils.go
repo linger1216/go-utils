@@ -173,7 +173,16 @@ func InterruptHandler(errc chan<- error) {
 	errc <- terminateError
 }
 
-func GetFileList(directory string, ext string) []string {
+func In(arr []string, val string) bool {
+	for i := range arr {
+		if arr[i] == val {
+			return true
+		}
+	}
+	return false
+}
+
+func GetFileList(directory string, exts ...string) []string {
 	ext = strings.ToLower(ext)
 	arr := make([]string, 0)
 	err := filepath.Walk(directory, func(filename string, f os.FileInfo, err error) error {
@@ -183,7 +192,7 @@ func GetFileList(directory string, ext string) []string {
 		if f.IsDir() {
 			return nil
 		}
-		if len(ext) == 0 || ext == path.Ext(filename) {
+		if len(exts) == 0 || In(exts, path.Ext(filename)) {
 			arr = append(arr, filename)
 		}
 		return nil
