@@ -64,11 +64,20 @@ func (x *WriterFile) Exec(args ...[]interface{}) (interface{}, error) {
 		for _, unit := range v {
 			switch x := unit.(type) {
 			case []byte:
-				content.Write(x)
+				_, err := content.Write(x)
+				if err != nil {
+					return nil, err
+				}
 			case string:
-				content.WriteString(x)
+				_, err := content.WriteString(x)
+				if err != nil {
+					return nil, err
+				}
 			case byte:
-				content.WriteByte(x)
+				err := content.WriteByte(x)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 		_, err := x.w.Write(content.Bytes())
