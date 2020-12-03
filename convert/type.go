@@ -113,3 +113,35 @@ func Str2bytes(s string) []byte {
 func Bytes2str(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
+
+func Digit2Chinese(s string) string {
+	var ret bytes.Buffer
+	for _, v := range s {
+		switch v {
+		case '0':
+			ret.WriteRune('零')
+		case '1':
+			ret.WriteRune('一')
+		case '2':
+			ret.WriteRune('二')
+		case '3':
+			ret.WriteRune('三')
+		case '4':
+			ret.WriteRune('四')
+		case '5':
+			ret.WriteRune('五')
+		case '6':
+			ret.WriteRune('六')
+		case '7':
+			ret.WriteRune('七')
+		case '8':
+			ret.WriteRune('八')
+		case '9':
+			ret.WriteRune('九')
+		default:
+			ret.WriteRune(v)
+		}
+	}
+	ss := ret.String()
+	return ss
+}

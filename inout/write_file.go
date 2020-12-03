@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"os"
 	"strings"
-	"sync"
 )
 
 type WriterFileConfig struct {
@@ -21,14 +20,11 @@ func NewWriterFileConfig(flag string, filename string, writeSize int) *WriterFil
 }
 
 type WriterFile struct {
-	sync.RWMutex
 	f *os.File
 	w *bufio.Writer
 }
 
 func (x *WriterFile) Close() error {
-	x.Lock()
-	defer x.Unlock()
 	_ = x.w.Flush()
 	return x.f.Close()
 }
@@ -56,28 +52,24 @@ func NewWriterFile(cfg *WriterFileConfig) *WriterFile {
 	return ret
 }
 
-func (x *WriterFile) Exec(args ...[]interface{}) (interface{}, error) {
-	x.Lock()
-	defer x.Unlock()
+func (x *WriterFile) Exec(args ...interface{}) (interface{}, error) {
 	for _, v := range args {
 		var content bytes.Buffer
-		for _, unit := range v {
-			switch x := unit.(type) {
-			case []byte:
-				_, err := content.Write(x)
-				if err != nil {
-					return nil, err
-				}
-			case string:
-				_, err := content.WriteString(x)
-				if err != nil {
-					return nil, err
-				}
-			case byte:
-				err := content.WriteByte(x)
-				if err != nil {
-					return nil, err
-				}
+		switch x := v.(type) {
+		case []byte:
+			_, err := content.Write(x)
+			if err != nil {
+				return nil, err
+			}
+		case string:
+			_, err := content.WriteString(x)
+			if err != nil {
+				return nil, err
+			}
+		case byte:
+			err := content.WriteByte(x)
+			if err != nil {
+				return nil, err
 			}
 		}
 		_, err := x.w.Write(content.Bytes())
