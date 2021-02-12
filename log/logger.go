@@ -17,3 +17,15 @@ func NewLog() *Log {
 	l := logger.Sugar()
 	return &Log{logger: logger, l: l}
 }
+
+func (l *Log) Debugf(template string, args ...interface{}) {
+	l.l.Debugf(template, args...)
+}
+
+func (l *Log) Infof(template string, args ...interface{}) {
+	l.l.Infof(template, args...)
+}
+
+func (l *Log) Warnf(template string, args ...interface{}) {
+	l.l.Warnf(template, args...)
+}
